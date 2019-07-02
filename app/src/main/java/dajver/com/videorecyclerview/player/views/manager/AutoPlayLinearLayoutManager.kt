@@ -1,4 +1,4 @@
-package dajver.com.videorecyclerview.player.manager
+package dajver.com.videorecyclerview.player.views.manager
 
 import android.content.Context
 import android.util.Log

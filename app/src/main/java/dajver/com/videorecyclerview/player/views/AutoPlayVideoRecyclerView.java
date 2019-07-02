@@ -10,7 +10,7 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import dajver.com.videorecyclerview.player.views.holder.VideoHolder;
-import dajver.com.videorecyclerview.player.manager.AutoPlayLinearLayoutManager;
+import dajver.com.videorecyclerview.player.views.manager.AutoPlayLinearLayoutManager;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
