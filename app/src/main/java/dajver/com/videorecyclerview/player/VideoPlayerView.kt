@@ -29,8 +29,6 @@ open class VideoPlayerView : LinearLayout, PlayerStateChangedListener.OnPlayerSt
     private var player: SimpleExoPlayer? = null
     private var quality: VideoPlayerQuality? = null
 
-    val currentPosition: Long get() = if (player != null) player!!.currentPosition else 0
-
     val videoHeight: Int get() {
         val metrics = context.resources.displayMetrics
         (context as Activity).windowManager.defaultDisplay.getRealMetrics(metrics)

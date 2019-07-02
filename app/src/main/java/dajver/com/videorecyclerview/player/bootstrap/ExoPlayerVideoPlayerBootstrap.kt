@@ -7,9 +7,6 @@ import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.DefaultLoadControl.DEFAULT_BUFFER_FOR_PLAYBACK_MS
 import com.google.android.exoplayer2.DefaultLoadControl.DEFAULT_TARGET_BUFFER_BYTES
 import com.google.android.exoplayer2.Player.REPEAT_MODE_ALL
-import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory
-import com.google.android.exoplayer2.source.ExtractorMediaSource
-import com.google.android.exoplayer2.source.MediaSource
 import com.google.android.exoplayer2.source.hls.HlsMediaSource
 import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection
 import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection.*
@@ -18,8 +15,8 @@ import com.google.android.exoplayer2.upstream.DefaultAllocator
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.util.Util
-import dajver.com.videorecyclerview.player.bootstrap.factory.StartupTrackSelectionFactory
 import dajver.com.videorecyclerview.player.bootstrap.enums.VideoPlayerQuality
+import dajver.com.videorecyclerview.player.bootstrap.factory.StartupTrackSelectionFactory
 
 open class ExoPlayerVideoPlayerBootstrap(context: Context, videoPlayerQuality: VideoPlayerQuality) {
 
@@ -30,8 +27,6 @@ open class ExoPlayerVideoPlayerBootstrap(context: Context, videoPlayerQuality: V
     var isVideoPaused = false;
     var isAppStopped = false
     var isBuffering = false
-
-    var isVideoFinished = false
 
     init {
         val trackSelector = DefaultTrackSelector()
@@ -86,14 +81,6 @@ open class ExoPlayerVideoPlayerBootstrap(context: Context, videoPlayerQuality: V
         parameters.setForceHighestSupportedBitrate(true)
         parameters.setAllowNonSeamlessAdaptiveness(true)
         return parameters
-    }
-
-    protected fun promoVideoSource(uri: Uri): MediaSource {
-        val playerInfo = Util.getUserAgent(mContext, "ExoPlayerInfo")
-        val dataSourceFactory = DefaultDataSourceFactory(mContext, playerInfo)
-        return ExtractorMediaSource.Factory(dataSourceFactory)
-            .setExtractorsFactory(DefaultExtractorsFactory())
-            .createMediaSource(uri)
     }
 
     fun buildMediaSource(uri: Uri): HlsMediaSource {
