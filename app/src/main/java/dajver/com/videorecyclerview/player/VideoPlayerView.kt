@@ -23,26 +23,21 @@ import kotlinx.android.synthetic.main.view_video_player.view.*
 
 open class VideoPlayerView : LinearLayout, PlayerStateChangedListener.OnPlayerStateChangedListener {
 
-    private val onPlayerVisibleListener: ViewHolder.OnPlayerVisibleListener? = null
-    private lateinit var exoPlayerVideoPlayerBootstrap: ExoPlayerVideoPlayerBootstrap
-    private var player: SimpleExoPlayer? = null
     private lateinit var model: VideosModel
+    private lateinit var exoPlayerVideoPlayerBootstrap: ExoPlayerVideoPlayerBootstrap
+
+    private var player: SimpleExoPlayer? = null
     private var quality: VideoPlayerQuality? = null
 
-    val isVideoFinished: Boolean
-        get() = exoPlayerVideoPlayerBootstrap.isVideoFinished
+    val currentPosition: Long get() = if (player != null) player!!.currentPosition else 0
 
-    val currentPosition: Long
-        get() = if (player != null) player!!.currentPosition else 0
-
-    val videoHeight: Int
-        get() {
-            val metrics = context.resources.displayMetrics
-            (context as Activity).windowManager.defaultDisplay.getRealMetrics(metrics)
-            val ratio = metrics.widthPixels * metrics.density / (metrics.heightPixels * metrics.density)
-            val screenHeight = (metrics.widthPixels * ratio).toInt()
-            return screenHeight + PLAYER_RATIO_HEIGHT_OFFSET
-        }
+    val videoHeight: Int get() {
+        val metrics = context.resources.displayMetrics
+        (context as Activity).windowManager.defaultDisplay.getRealMetrics(metrics)
+        val ratio = metrics.widthPixels * metrics.density / (metrics.heightPixels * metrics.density)
+        val screenHeight = (metrics.widthPixels * ratio).toInt()
+        return screenHeight + PLAYER_RATIO_HEIGHT_OFFSET
+    }
 
     constructor(context: Context) : super(context) {
         init()
@@ -59,18 +54,17 @@ open class VideoPlayerView : LinearLayout, PlayerStateChangedListener.OnPlayerSt
     private fun init() {
         val inflater = LayoutInflater.from(context)
         inflater.inflate(dajver.com.videorecyclerview.R.layout.view_video_player, this)
-        setup(VideoPlayerQuality.ADAPTIVE)
+        setup(VideoPlayerQuality.LOWEST)
     }
 
     private fun setup(quality: VideoPlayerQuality) {
         this.quality = quality
     }
 
-    fun initPlayer(videosModel: VideosModel) {
+    fun initPlayer(videosModel: VideosModel, onPlayerVisibleListener: ViewHolder.OnPlayerVisibleListener?) {
         this.model = videosModel
 
-        exoPlayerVideoPlayerBootstrap =
-            ExoPlayerVideoPlayerBootstrap(context, quality!!)
+        exoPlayerVideoPlayerBootstrap = ExoPlayerVideoPlayerBootstrap(context, quality!!)
         exoPlayerVideoPlayerBootstrap.isVideoPrepared = false
 
         if (player == null) {
@@ -89,8 +83,7 @@ open class VideoPlayerView : LinearLayout, PlayerStateChangedListener.OnPlayerSt
             player!!.prepare(mediaSource, true, true)
             player!!.addListener(PlayerStateChangedListener(this))
 
-            if (onPlayerVisibleListener != null)
-                onPlayerVisibleListener.onActivePlayerView(this);
+            onPlayerVisibleListener?.onActivePlayerView(this)
         }
     }
 
@@ -103,7 +96,6 @@ open class VideoPlayerView : LinearLayout, PlayerStateChangedListener.OnPlayerSt
             player!!.playWhenReady = true
             player!!.playbackState
         }
-        System.gc()
     }
 
     fun pauseVideo() {
@@ -115,7 +107,7 @@ open class VideoPlayerView : LinearLayout, PlayerStateChangedListener.OnPlayerSt
         exoPlayerVideoPlayerBootstrap.isVideoPaused = true
     }
 
-    fun resumeVideo(resumeTime: Long) {
+    fun resumeVideo() {
         if (player != null) {
             player!!.playWhenReady = true
             player!!.playbackState
@@ -166,6 +158,6 @@ open class VideoPlayerView : LinearLayout, PlayerStateChangedListener.OnPlayerSt
     }
 
     companion object {
-        val PLAYER_RATIO_HEIGHT_OFFSET = 100
+        const val PLAYER_RATIO_HEIGHT_OFFSET = 100
     }
 }

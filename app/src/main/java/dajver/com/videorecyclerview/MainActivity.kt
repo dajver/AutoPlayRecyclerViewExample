@@ -8,6 +8,8 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
+    var videoRecyclerAdapter: VideoRecyclerAdapter? = null
+
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -21,8 +23,29 @@ class MainActivity : AppCompatActivity() {
         videosList.add(VideosModel("The mountains", "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8"))
         videosList.add(VideosModel("Bunny", "http://184.72.239.149/vod/smil:BigBuckBunny.smil/playlist.m3u8"))
 
-        val videoRecyclerAdapter = VideoRecyclerAdapter()
-        videoRecyclerAdapter.addItems(videosList)
+        videoRecyclerAdapter = VideoRecyclerAdapter()
+        videoRecyclerAdapter!!.addItems(videosList)
         recyclerView.adapter = videoRecyclerAdapter
+    }
+
+    public override fun onPause() {
+        super.onPause()
+        videoRecyclerAdapter?.pause()
+    }
+
+    public override fun onDestroy() {
+        super.onDestroy()
+        videoRecyclerAdapter?.stop()
+        recyclerView.adapter = null
+    }
+
+    public override fun onStop() {
+        super.onStop()
+        videoRecyclerAdapter?.pause()
+    }
+
+    public override fun onResume() {
+        super.onResume()
+        videoRecyclerAdapter?.resumeLastPlayer()
     }
 }

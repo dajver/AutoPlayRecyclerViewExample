@@ -29,12 +29,12 @@ open class VideoRecyclerAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val cardView = LayoutInflater.from(parent.context).inflate(R.layout.item_video_view_holder, parent, false)
-        return ViewHolder(cardView)
+        return ViewHolder(cardView, this)
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val viewHolder = holder as ViewHolder
-        viewHolder.bind(videosModels[position], this)
+        viewHolder.bind(videosModels[position])
         holder.setIsRecyclable(true)
     }
 
@@ -54,9 +54,9 @@ open class VideoRecyclerAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(
         }
     }
 
-    fun resumeLastPlayer(resumePosition: Long) {
+    fun resumeLastPlayer() {
         if (isInternetConnected && videoPlayerView != null && mRecyclerView != null) {
-            videoPlayerView!!.resumeVideo(resumePosition)
+            videoPlayerView!!.resumeVideo()
         }
     }
 
